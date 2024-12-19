@@ -66,3 +66,7 @@ main {
 .fa-trash-alt {
   color: #de6b5c;
 }
+/* Cœur qui devient rouge quand "liké" */
+.fas.fa-heart.liked {
+  color: red;
+}
