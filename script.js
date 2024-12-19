@@ -1,46 +1,40 @@
-// Assurez-vous que ce script est inclus dans votre fichier HTML.
-
-// Fonction pour mettre à jour le total
-define function updateTotal() {
-    const items = document.querySelectorAll('.cart-item');
+// Function to update the total price
+function updateTotal() {
     let total = 0;
+    const products = document.querySelectorAll('.card-body');
 
-    items.forEach(item => {
-        const price = parseFloat(item.querySelector('.item-price').textContent.replace('$', ''));
-        const quantity = parseInt(item.querySelector('.item-quantity').value);
-        total += price * quantity;
+    products.forEach(product => {
+        const unitPrice = parseFloat(product.querySelector('.unit-price').textContent.replace(' $', ''));
+        const quantity = parseInt(product.querySelector('.quantity').textContent);
+        total += unitPrice * quantity;
     });
 
-    document.querySelector('#total-price').textContent = `$${total.toFixed(2)}`;
+    // Update the total price in the DOM
+    document.querySelector('.total').textContent = `${total} $`;
 }
 
-// Gestion des boutons + et -
+// Event listener for the plus and minus buttons to increase/decrease quantity
 document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('btn-plus')) {
-        const quantityInput = event.target.closest('.cart-item').querySelector('.item-quantity');
-        quantityInput.value = parseInt(quantityInput.value) + 1;
+    if (event.target.classList.contains('fa-plus-circle')) {
+        const quantityElement = event.target.closest('.card-body').querySelector('.quantity');
+        let quantity = parseInt(quantityElement.textContent);
+        quantityElement.textContent = quantity + 1;
         updateTotal();
-    } else if (event.target.classList.contains('btn-minus')) {
-        const quantityInput = event.target.closest('.cart-item').querySelector('.item-quantity');
-        if (parseInt(quantityInput.value) > 1) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
+    }
+
+    if (event.target.classList.contains('fa-minus-circle')) {
+        const quantityElement = event.target.closest('.card-body').querySelector('.quantity');
+        let quantity = parseInt(quantityElement.textContent);
+        if (quantity > 0) {
+            quantityElement.textContent = quantity - 1;
             updateTotal();
         }
     }
-});
 
-// Gestion de la suppression des articles
-document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('btn-remove')) {
-        const item = event.target.closest('.cart-item');
-        item.remove();
+    // Event listener for the trash icon to remove an item from the cart
+    if (event.target.classList.contains('fa-trash-alt')) {
+        const productElement = event.target.closest('.card-body');
+        productElement.remove();
         updateTotal();
-    }
-});
-
-// Gestion du bouton "cœur" pour aimer les articles
-document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('btn-heart')) {
-        event.target.classList.toggle('liked');
     }
 });
